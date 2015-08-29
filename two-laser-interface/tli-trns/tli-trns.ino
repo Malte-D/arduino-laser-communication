@@ -1,35 +1,22 @@
-int clk  = 11;
-int data = 12;
+int clkPin  = 11;
+int dataPin = 12;
 int baud = 200;
 
 void setup() {
   Serial.begin(115200);
-  pinMode(clk, OUTPUT);
-  pinMode(data, OUTPUT);
+  pinMode(clkPin, OUTPUT);
+  pinMode(dataPin, OUTPUT);
 }
 
-void sendOne(int e) {
-  digitalWrite(data, HIGH);
-  digitalWrite(clk, HIGH);
+void sendData(int data, int byteEnd){
+  digitalWrite(dataPin, data);
+  digitalWrite(clkPin, HIGH);
   delay(baud);
-  digitalWrite(clk, LOW);
-  if(e) {
-    digitalWrite(data, HIGH);
+  digitalWrite(clkPin, LOW);
+  if(byteEnd) {
+    digitalWrite(dataPin, HIGH);
   } else {
-    digitalWrite(data, LOW);
-  }
-  delay(baud);
-}
-
-void sendZero(int e) {
-  digitalWrite(data, LOW);
-  digitalWrite(clk, HIGH);
-  delay(baud);
-  digitalWrite(clk, LOW);
-  if(e) {
-    digitalWrite(data, HIGH);
-  } else {
-    digitalWrite(data, LOW);
+    digitalWrite(dataPin, LOW);
   }
   delay(baud);
 }
@@ -37,11 +24,7 @@ void sendZero(int e) {
 void sendChar(char input) {
   for(int i = 0; i < 9; i++) {
     int b = input & 1;
-    if(b) {
-      sendOne(i==7);
-    } else {
-      sendZero(i==7);
-    }
+    sendData(b,i==7);
     input = input >> 1;
   }
 }
