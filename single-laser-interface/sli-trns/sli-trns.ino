@@ -1,7 +1,7 @@
 int baud = 300;
 
-void setup()
-{
+void setup() {
+  Serial.begin(115200);
   pinMode (12, OUTPUT); // define the digital output interface 13 feet
 }
 
@@ -66,22 +66,8 @@ void sendChar(char input) {
   sendPause();
 }
 
-void sendInt(int input) {
-  for(int i = 0; i < 4; i++) {
-    int b = input & 1;
-    if(b) {
-      sendOne();
-    } else {
-      sendZero();
-    }
-    input = input >> 1;
-  }
-  sendPause();
-}
-
 void loop() {
-  // 00101100 => ,
-  // 01000001 => A
-  // 00100001 => !
-  sendChar('x');
+  while(!Serial.available()) {
+  }
+  sendChar(Serial.read());
 }
